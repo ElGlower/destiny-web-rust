@@ -19,7 +19,20 @@ use state::AppState;
 async fn main() {
     // 0. Si existe la variable de entorno FIREBASE_KEY_JSON, escribirla en firebase-key.json
     if let Ok(key_content) = std::env::var("FIREBASE_KEY_JSON") {
-        if let Err(e) = std::fs::write("firebase-key.json", key_content) {
+        let decoded_content = if key_content.trim().starts_with('{') {
+            key_content.into_bytes()
+        } else {
+            use base64::{Engine as _, engine::general_purpose};
+            match general_purpose::STANDARD.decode(key_content.trim().replace("\n", "").replace("\r", "")) {
+                Ok(bytes) => bytes,
+                Err(e) => {
+                    eprintln!("Error al decodificar FIREBASE_KEY_JSON en base64: {}", e);
+                    key_content.into_bytes()
+                }
+            }
+        };
+
+        if let Err(e) = std::fs::write("firebase-key.json", decoded_content) {
             eprintln!("Error al escribir firebase-key.json desde variable de entorno: {}", e);
         } else {
             println!("firebase-key.json escrito correctamente desde la variable de entorno.");

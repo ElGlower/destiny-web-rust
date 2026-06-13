@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: destiny-web-rust
+    runtime: rust
+    buildCommand: cargo build --release
+    startCommand: ./target/release/destiny-web-rust
+    envVars:
+      - key: FIREBASE_KEY_JSON
+        sync: false

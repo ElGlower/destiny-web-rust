@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destiny Network - Estadísticas en Tiempo Real</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>DESTINY NETWORK</h1>
+    </header>
+    <div class="container">
+        <!-- Estado en Vivo del Servidor -->
+        <div class="card live-status-card">
+            <h2>Servidor en Vivo - The Towers</h2>
+            <div class="live-status-container">
+                <div class="live-status-item">
+                    <span class="live-status-label">Estado:</span>
+                    <span id="liveStatus" class="live-status-value status-offline">Cargando...</span>
+                </div>
+                <div class="live-status-item">
+                    <span class="live-status-label">Jugadores:</span>
+                    <span id="livePlayers" class="live-status-value">0</span>
+                </div>
+                <div class="live-status-item">
+                    <span class="live-status-label">Evento Activo:</span>
+                    <span id="liveEvent" class="live-status-value event-none">Ninguno</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Búsqueda de jugador -->
+        <div class="card">
+            <h2>Buscar Estadísticas de Jugador</h2>
+            <div class="search-box">
+                <input type="text" id="playerUuid" placeholder="Ingresa el UUID del jugador...">
+                <button onclick="searchPlayer()">Buscar</button>
+            </div>
+            <div id="playerResult" style="display: none;">
+                <h3 id="playerName" style="margin-top: 30px; margin-bottom: 15px;"></h3>
+                
+                <!-- Pestañas de Minijuegos -->
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('ttr')">The Towers</button>
+                    <button class="tab-button" onclick="switchTab('skywars')">SkyWars</button>
+                    <button class="tab-button" onclick="switchTab('bedwars')">BedWars</button>
+                </div>
+
+                <!-- Contenido de Pestañas -->
+                <div id="tab-ttr" class="tab-content active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">Asesinatos</div>
+                            <div class="value" id="statKills">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Victorias</div>
+                            <div class="value" id="statWins">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Partidas Jugadas</div>
+                            <div class="value" id="statPlayed">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-skywars" class="tab-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">Asesinatos</div>
+                            <div class="value">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Victorias</div>
+                            <div class="value">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Partidas Jugadas</div>
+                            <div class="value">0</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: var(--text-muted); margin-top: 15px; font-size: 0.9em;">
+                        Estadísticas de SkyWars (Destiny Network). Minijuego en desarrollo.
+                    </p>
+                </div>
+
+                <div id="tab-bedwars" class="tab-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">Camas Destruidas</div>
+                            <div class="value">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Victorias</div>
+                            <div class="value">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Partidas Jugadas</div>
+                            <div class="value">0</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: var(--text-muted); margin-top: 15px; font-size: 0.9em;">
+                        Estadísticas de BedWars (Destiny Network). Minijuego en desarrollo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de clasificación -->
+        <div class="card">
+            <h2>Leaderboard - The Towers</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Jugador</th>
+                        <th>Kills</th>
+                        <th>Victorias</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted);">Cargando clasificación...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

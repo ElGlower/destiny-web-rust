@@ -104,6 +104,9 @@ pub fn render() -> &'static str {
 
 </div>
 
+<!-- Incluir la librería de skinview3d para visualización 3D interactiva -->
+<script src="https://unpkg.com/skinview3d@3.0.0/dist/bundle/skinview3d.bundle.js"></script>
+
 <!-- Modal emergente para detalles de Staff -->
 <div id="staffModal" class="staff-modal-overlay">
   <div class="staff-modal-card glass-surface">
@@ -118,8 +121,8 @@ pub fn render() -> &'static str {
         <!-- Social links loaded dynamically -->
       </div>
     </div>
-    <div class="staff-modal-right">
-      <img id="modalSkin" src="" class="staff-modal-skin" alt="skin">
+    <div class="staff-modal-right" id="modalSkinContainer">
+      <!-- Aquí se creará el canvas de skinview3d -->
     </div>
   </div>
 </div>
@@ -183,13 +186,14 @@ const staffData = {
   }
 };
 
+let skinViewer = null;
+
 function openStaffModal(username) {
   const data = staffData[username];
   if (!data) return;
 
   document.getElementById('modalName').innerText = username;
   document.getElementById('modalDesc').innerText = data.desc;
-  document.getElementById('modalSkin').src = `https://mc-heads.net/player/${username}/150`;
 
   const socialsContainer = document.getElementById('modalSocials');
   socialsContainer.innerHTML = '';
@@ -203,10 +207,56 @@ function openStaffModal(username) {
   });
 
   document.getElementById('staffModal').classList.add('active');
+
+  // Inicializar visor 3D con delay para esperar el renderizado del modal
+  setTimeout(() => {
+    try {
+      if (skinViewer) {
+        skinViewer.dispose();
+      }
+
+      const container = document.getElementById('modalSkinContainer');
+      container.innerHTML = ''; // Limpiar canvas previo
+      
+      const canvas = document.createElement("canvas");
+      container.appendChild(canvas);
+
+      // Usar mineskin.eu para obtener el skin layout de forma segura
+      skinViewer = new skinview3d.SkinViewer({
+        canvas: canvas,
+        width: 200,
+        height: 250,
+        skin: `https://mineskin.eu/skin/${username}`
+      });
+
+      // Configurar controles orbitales (arrastrar para rotar)
+      const orbitControl = skinview3d.createOrbitControls(skinViewer);
+      orbitControl.enableZoom = false;
+      orbitControl.enablePan = false;
+
+      // Animaciones y velocidad
+      skinViewer.autoRotate = true;
+      skinViewer.autoRotateSpeed = 0.6;
+
+      // Aplicar animación de caminar de Minecraft
+      skinViewer.animation = new skinview3d.WalkingAnimation();
+      skinViewer.animation.speed = 0.7;
+
+    } catch (e) {
+      console.error("Error al cargar visor de skin 3D:", e);
+      // Fallback a imagen estática si WebGL falla o no es compatible
+      const container = document.getElementById('modalSkinContainer');
+      container.innerHTML = `<img src="https://mc-heads.net/player/${username}/150" class="staff-modal-skin" alt="${username}">`;
+    }
+  }, 100);
 }
 
 function closeStaffModal() {
   document.getElementById('staffModal').classList.remove('active');
+  if (skinViewer) {
+    skinViewer.dispose();
+    skinViewer = null;
+  }
 }
 
 // Cerrar modal al hacer click fuera de la tarjeta

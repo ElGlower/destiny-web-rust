@@ -348,6 +348,16 @@ tr:hover .player-head { transform: scale(1.18) rotate(4deg); }
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 250px;
+  overflow: visible;
+}
+.staff-modal-right canvas {
+  outline: none;
+  cursor: grab;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.5));
+}
+.staff-modal-right canvas:active {
+  cursor: grabbing;
 }
 .staff-modal-skin {
   height: 180px;

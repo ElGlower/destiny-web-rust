@@ -346,5 +346,60 @@ footer p { margin-top: 16px; line-height: 1.5; }
   .event-item { flex-direction: column; gap: 16px; }
   .event-meta { min-width: auto; flex-direction: row; justify-content: space-between; width: 100%; align-items: center; }
 }
+
+/* Detalle de Estadísticas de Modalidad */
+.stats-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.stat-detail-card {
+  padding: 16px;
+  border-radius: var(--md-sys-shape-corner-large);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s var(--md-sys-motion-easing-emphasized);
+}
+.stat-detail-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+}
+.stat-detail-card .stat-icon {
+  font-size: 28px;
+  padding: 10px;
+  border-radius: var(--md-sys-shape-corner-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-detail-card .stat-icon.color-kills { color: #ff5252; background: rgba(255, 82, 82, 0.1); }
+.stat-detail-card .stat-icon.color-assists { color: #40c4ff; background: rgba(64, 196, 255, 0.1); }
+.stat-detail-card .stat-icon.color-wins { color: #ffd740; background: rgba(255, 215, 64, 0.1); }
+.stat-detail-card .stat-icon.color-losses { color: #ff5252; background: rgba(255, 82, 82, 0.1); }
+.stat-detail-card .stat-icon.color-matches { color: #e040fb; background: rgba(224, 64, 251, 0.1); }
+
+.stat-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stat-detail-info .stat-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--md-sys-color-on-surface);
+}
+.stat-detail-info .stat-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #a0a0a8;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.stat-detail-info .stat-desc {
+  font-size: 0.7rem;
+  color: #7c7c84;
+}
 "##
 }

@@ -177,12 +177,47 @@ pub fn render(username: &str, stats_value: &serde_json::Value) -> String {
         <div class="event-details">
           <h3>The Towers Remastered</h3>
           <p>Controla los puentes y anota en las jaulas enemigas. Estadísticas acumulativas de combate e incursión.</p>
-          <div class="event-stats-chips">
-            <span class="chip"><span class="material-symbols-rounded">swords</span> {} Kills</span>
-            <span class="chip"><span class="material-symbols-rounded">handshake</span> {} Assists</span>
-            <span class="chip"><span class="material-symbols-rounded">emoji_events</span> {} Victorias</span>
-            <span class="chip"><span class="material-symbols-rounded">skull</span> {} Derrotas</span>
-            <span class="chip"><span class="material-symbols-rounded">videogame_asset</span> {} Partidas</span>
+          <div class="stats-details-grid">
+            <div class="stat-detail-card glass-surface">
+              <span class="material-symbols-rounded stat-icon color-kills">swords</span>
+              <div class="stat-detail-info">
+                <span class="stat-value">{}</span>
+                <span class="stat-label">Asesinatos</span>
+                <span class="stat-desc">Enemigos eliminados</span>
+              </div>
+            </div>
+            <div class="stat-detail-card glass-surface">
+              <span class="material-symbols-rounded stat-icon color-assists">handshake</span>
+              <div class="stat-detail-info">
+                <span class="stat-value">{}</span>
+                <span class="stat-label">Asistencias</span>
+                <span class="stat-desc">Apoyo a compañeros</span>
+              </div>
+            </div>
+            <div class="stat-detail-card glass-surface">
+              <span class="material-symbols-rounded stat-icon color-wins">emoji_events</span>
+              <div class="stat-detail-info">
+                <span class="stat-value">{}</span>
+                <span class="stat-label">Victorias</span>
+                <span class="stat-desc">Juegos ganados</span>
+              </div>
+            </div>
+            <div class="stat-detail-card glass-surface">
+              <span class="material-symbols-rounded stat-icon color-losses">skull</span>
+              <div class="stat-detail-info">
+                <span class="stat-value">{}</span>
+                <span class="stat-label">Derrotas</span>
+                <span class="stat-desc">Juegos perdidos</span>
+              </div>
+            </div>
+            <div class="stat-detail-card glass-surface">
+              <span class="material-symbols-rounded stat-icon color-matches">sports_esports</span>
+              <div class="stat-detail-info">
+                <span class="stat-value">{}</span>
+                <span class="stat-label">Partidas</span>
+                <span class="stat-desc">Encuentros totales</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -258,16 +258,14 @@ function initListSkins() {
         skin: `/api/skin/${username}`
       });
       
-      // Ajustar posición inicial elegante en perspectiva
-      viewer.camera.position.x = 12;
-      viewer.camera.position.y = 8;
-      viewer.camera.position.z = 24;
+      // Ajustar posición inicial de frente
+      viewer.camera.position.x = 0;
+      viewer.camera.position.y = 0;
+      viewer.camera.position.z = 15;
       
-      // Animación de caminar lento de fondo por defecto
-      viewer.autoRotate = true;
-      viewer.autoRotateSpeed = 0.4;
-      viewer.animation = new skinview3d.WalkingAnimation();
-      viewer.animation.speed = 0.3;
+      // Estático por defecto (sin rotar)
+      viewer.autoRotate = false;
+      viewer.animation = null;
       
       viewers[username] = viewer;
       
@@ -288,17 +286,16 @@ function initListSkins() {
             viewer.animation = new skinview3d.WaveAnimation("right");
             viewer.animation.speed = 1.5;
           }
-          viewer.autoRotateSpeed = 2.0;
+          viewer.autoRotate = false;
         });
         
         card.addEventListener('mouseleave', () => {
-          // Retornar a caminar lento por defecto
-          viewer.animation = new skinview3d.WalkingAnimation();
-          viewer.animation.speed = 0.3;
-          viewer.autoRotateSpeed = 0.4;
-          viewer.camera.position.x = 12;
-          viewer.camera.position.y = 8;
-          viewer.camera.position.z = 24;
+          // Retornar a estático (sin animación)
+          viewer.animation = null;
+          viewer.autoRotate = false;
+          viewer.camera.position.x = 0;
+          viewer.camera.position.y = 0;
+          viewer.camera.position.z = 15;
         });
       }
       

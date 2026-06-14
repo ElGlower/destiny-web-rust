@@ -70,3 +70,25 @@ pub async fn serve_icon() -> impl IntoResponse {
     ([(header::CONTENT_TYPE, "image/png")], bytes)
 }
 
+pub async fn get_skin_proxy(
+    Path(username): Path<String>,
+) -> impl IntoResponse {
+    let url = format!("https://mc-heads.net/skin/{}", username);
+    match reqwest::get(&url).await {
+        Ok(resp) => {
+            if resp.status().is_success() {
+                if let Ok(bytes) = resp.bytes().await {
+                    let mut headers = axum::http::HeaderMap::new();
+                    headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("image/png"));
+                    headers.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, header::HeaderValue::from_static("*"));
+                    return (StatusCode::OK, headers, bytes.to_vec()).into_response();
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Error al hacer proxy de skin para {}: {}", username, e);
+        }
+    }
+    StatusCode::NOT_FOUND.into_response()
+}
+

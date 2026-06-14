@@ -70,6 +70,7 @@ async fn main() {
         .route("/profile/:uuid", get(handlers::profile_page))
         .route("/staff", get(handlers::staff_page))
         .route("/icon.png", get(handlers::serve_icon))
+        .route("/api/skin/:username", get(handlers::get_skin_proxy))
         
         // API REST
         .route("/api/leaderboard", get(handlers::get_leaderboard))

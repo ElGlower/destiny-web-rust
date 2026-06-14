@@ -195,12 +195,11 @@ function openStaffModal(username) {
       const canvas = document.createElement("canvas");
       container.appendChild(canvas);
 
-      // Usar mc-heads.net/skin/ que es inmediato y no tiene límites estrictos
       skinViewer = new skinview3d.SkinViewer({
         canvas: canvas,
         width: 200,
         height: 250,
-        skin: `https://mc-heads.net/skin/${username}`
+        skin: `/api/skin/${username}`
       });
 
       // Configurar controles orbitales (arrastrar para rotar)
@@ -257,7 +256,7 @@ function initListSkins() {
         canvas: canvas,
         width: 80,
         height: 100,
-        skin: `https://mc-heads.net/skin/${username}`
+        skin: `/api/skin/${username}`
       });
       
       // Ajustar posición inicial elegante en perspectiva

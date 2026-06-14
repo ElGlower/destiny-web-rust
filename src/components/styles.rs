@@ -219,29 +219,71 @@ tr:hover .player-head { transform: scale(1.18) rotate(4deg); }
   background: rgba(255,255,255,0.05);
   box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
-.staff-skin-3d-wrapper {
+.staff-skin-container {
   position: relative;
   width: 90px;
   height: 90px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
   margin-bottom: 12px;
 }
-.staff-skin-3d-wrapper canvas {
-  outline: none;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
-  transition: transform 0.3s ease-in-out;
+.staff-skin-img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 90px;
+  width: auto;
+  transition: opacity 0.25s ease-in-out;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
 }
-.staff-card:hover .staff-skin-3d-wrapper canvas {
-  transform: scale(1.08);
+.staff-skin-img.hover-pose {
+  opacity: 0;
 }
-@keyframes waving {
-  0% { transform: translateX(-50%) scale(1.08) rotate(0deg); }
-  25% { transform: translateX(-50%) scale(1.08) rotate(-6deg); }
-  75% { transform: translateX(-50%) scale(1.08) rotate(6deg); }
-  100% { transform: translateX(-50%) scale(1.08) rotate(0deg); }
+.staff-card:hover .staff-skin-img.default-pose {
+  opacity: 0;
+}
+.staff-card:hover .staff-skin-img.hover-pose {
+  opacity: 1;
+}
+
+/* Animations for 2D skins on hover */
+@keyframes cssWaving {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  25% { transform: translateX(-50%) rotate(-4deg); }
+  75% { transform: translateX(-50%) rotate(4deg); }
+  100% { transform: translateX(-50%) rotate(0deg); }
+}
+@keyframes cssRunning {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+@keyframes cssSwimming {
+  0% { transform: translateX(-50%) translateY(0) rotate(-15deg); }
+  50% { transform: translateX(-50%) translateY(-4px) rotate(-10deg); }
+  100% { transform: translateX(-50%) translateY(0) rotate(-15deg); }
+}
+
+.waving-effect {
+  transform-origin: bottom center;
+}
+.staff-card:hover .waving-effect {
+  animation: cssWaving 0.8s ease-in-out infinite;
+}
+.staff-card:hover .running-effect {
+  animation: cssRunning 0.4s linear infinite;
+}
+.staff-card:hover .swimming-effect {
+  animation: cssSwimming 1.2s ease-in-out infinite;
+}
+
+.staff-modal-skin {
+  height: 160px;
+  width: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+  animation: cssWaving 1.5s ease-in-out infinite;
+  transform-origin: bottom center;
 }
 .staff-info-box {
   display: flex;

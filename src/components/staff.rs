@@ -10,63 +10,90 @@ pub fn render() -> &'static str {
 <h2 class="staff-rank-title slide-up">DestinyTeam</h2>
 <div class="staff-grid">
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('ElGlower')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-ElGlower"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/ElGlower/90" class="staff-skin-img default-pose" alt="ElGlower">
+      <img src="https://mc-heads.net/player/ElGlower/90" class="staff-skin-img hover-pose waving-effect" alt="ElGlower">
+    </div>
     <div class="staff-info-box">
       <h3>ElGlower</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('ElBalam15')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-ElBalam15"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/ElBalam15/90" class="staff-skin-img default-pose" alt="ElBalam15">
+      <img src="https://mc-heads.net/player/ElBalam15/90" class="staff-skin-img hover-pose swimming-effect" alt="ElBalam15">
+    </div>
     <div class="staff-info-box">
       <h3>ElBalam15</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('espiral_')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-espiral_"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/espiral_/90" class="staff-skin-img default-pose" alt="espiral_">
+      <img src="https://mc-heads.net/player/espiral_/90" class="staff-skin-img hover-pose running-effect" alt="espiral_">
+    </div>
     <div class="staff-info-box">
       <h3>espiral_</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('pilahd14')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-pilahd14"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/pilahd14/90" class="staff-skin-img default-pose" alt="pilahd14">
+      <img src="https://mc-heads.net/player/pilahd14/90" class="staff-skin-img hover-pose waving-effect" alt="pilahd14">
+    </div>
     <div class="staff-info-box">
       <h3>pilahd14</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('prismangames')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-prismangames"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/prismangames/90" class="staff-skin-img default-pose" alt="prismangames">
+      <img src="https://mc-heads.net/player/prismangames/90" class="staff-skin-img hover-pose swimming-effect" alt="prismangames">
+    </div>
     <div class="staff-info-box">
       <h3>prismangames</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('sombradr')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-sombradr"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/sombradr/90" class="staff-skin-img default-pose" alt="sombradr">
+      <img src="https://mc-heads.net/player/sombradr/90" class="staff-skin-img hover-pose waving-effect" alt="sombradr">
+    </div>
     <div class="staff-info-box">
       <h3>sombradr</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('ripkyn')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-ripkyn"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/ripkyn/90" class="staff-skin-img default-pose" alt="ripkyn">
+      <img src="https://mc-heads.net/player/ripkyn/90" class="staff-skin-img hover-pose swimming-effect" alt="ripkyn">
+    </div>
     <div class="staff-info-box">
       <h3>ripkyn</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('Cestart')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-Cestart"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/Cestart/90" class="staff-skin-img default-pose" alt="Cestart">
+      <img src="https://mc-heads.net/player/Cestart/90" class="staff-skin-img hover-pose waving-effect" alt="Cestart">
+    </div>
     <div class="staff-info-box">
       <h3>Cestart</h3>
       <p class="rank team">DestinyTeam</p>
     </div>
   </div>
   <div class="staff-card glass-surface slide-up" onclick="openStaffModal('zarahoria')">
-    <div class="staff-skin-3d-wrapper" id="skin3d-zarahoria"></div>
+    <div class="staff-skin-container">
+      <img src="https://mc-heads.net/body/zarahoria/90" class="staff-skin-img default-pose" alt="zarahoria">
+      <img src="https://mc-heads.net/player/zarahoria/90" class="staff-skin-img hover-pose waving-effect" alt="zarahoria">
+    </div>
     <div class="staff-info-box">
       <h3>zarahoria</h3>
       <p class="rank team">DestinyTeam</p>
@@ -76,9 +103,6 @@ pub fn render() -> &'static str {
 </div>
 
 </div>
-
-<!-- Incluir la librería de skinview3d para visualización 3D interactiva -->
-<script src="/skinview3d.bundle.js"></script>
 
 <!-- Modal emergente para detalles de Staff -->
 <div id="staffModal" class="staff-modal-overlay">
@@ -95,7 +119,7 @@ pub fn render() -> &'static str {
       </div>
     </div>
     <div class="staff-modal-right" id="modalSkinContainer">
-      <!-- Aquí se creará el canvas de skinview3d -->
+      <img id="modalSkinImg" src="" class="staff-modal-skin" alt="Skin">
     </div>
   </div>
 </div>
@@ -160,8 +184,6 @@ const staffData = {
   }
 };
 
-let skinViewer = null;
-
 function openStaffModal(username) {
   const data = staffData[username];
   if (!data) return;
@@ -180,55 +202,16 @@ function openStaffModal(username) {
     socialsContainer.appendChild(link);
   });
 
+  const modalSkinImg = document.getElementById('modalSkinImg');
+  if (modalSkinImg) {
+    modalSkinImg.src = `https://mc-heads.net/player/${username}/160`;
+  }
+
   document.getElementById('staffModal').classList.add('active');
-
-  // Inicializar visor 3D con delay para esperar el renderizado del modal
-  setTimeout(() => {
-    try {
-      if (skinViewer) {
-        skinViewer.dispose();
-      }
-
-      const container = document.getElementById('modalSkinContainer');
-      container.innerHTML = ''; // Limpiar canvas previo
-      
-      const canvas = document.createElement("canvas");
-      container.appendChild(canvas);
-
-      skinViewer = new skinview3d.SkinViewer({
-        canvas: canvas,
-        width: 200,
-        height: 250,
-        skin: `/api/skin/${username}`
-      });
-
-      // Configurar controles orbitales (incorporados en skinview3d v3.x)
-      skinViewer.controls.enableZoom = false;
-      skinViewer.controls.enablePan = false;
-
-      // Animaciones y velocidad
-      skinViewer.autoRotate = true;
-      skinViewer.autoRotateSpeed = 0.6;
-
-      // Aplicar animación de saludar (WaveAnimation) al abrir
-      skinViewer.animation = new skinview3d.WaveAnimation("right");
-      skinViewer.animation.speed = 1.0;
-
-    } catch (e) {
-      console.error("Error al cargar visor de skin 3D:", e);
-      // Fallback a imagen estática si WebGL falla o no es compatible
-      const container = document.getElementById('modalSkinContainer');
-      container.innerHTML = `<img src="https://mc-heads.net/player/${username}/150" class="staff-modal-skin" alt="${username}">`;
-    }
-  }, 100);
 }
 
 function closeStaffModal() {
   document.getElementById('staffModal').classList.remove('active');
-  if (skinViewer) {
-    skinViewer.dispose();
-    skinViewer = null;
-  }
 }
 
 // Cerrar modal al hacer click fuera de la tarjeta
@@ -237,88 +220,6 @@ document.getElementById('staffModal').addEventListener('click', (e) => {
     closeStaffModal();
   }
 });
-
-const viewers = {};
-
-function initListSkins() {
-  const usernames = ["ElGlower", "ElBalam15", "espiral_", "pilahd14", "prismangames", "sombradr", "ripkyn", "Cestart", "zarahoria"];
-  
-  usernames.forEach(username => {
-    try {
-      const container = document.getElementById(`skin3d-${username}`);
-      if (!container) return;
-      
-      const canvas = document.createElement("canvas");
-      container.appendChild(canvas);
-      
-      const viewer = new skinview3d.SkinViewer({
-        canvas: canvas,
-        width: 80,
-        height: 100,
-        skin: `/api/skin/${username}`
-      });
-      
-      // Ajustar posición inicial de frente
-      viewer.camera.position.x = 0;
-      viewer.camera.position.y = 0;
-      viewer.camera.position.z = 15;
-      
-      // Estático por defecto (sin rotar)
-      viewer.autoRotate = false;
-      viewer.animation = null;
-      
-      viewers[username] = viewer;
-      
-      // Agregar eventos hover sobre la tarjeta
-      const card = container.closest('.staff-card');
-      if (card) {
-        card.addEventListener('mouseenter', () => {
-          // Cambiar pose/animación al pasar el mouse (saludar, nadar o correr)
-          if (username === "ElBalam15" || username === "prismangames" || username === "ripkyn") {
-            viewer.animation = new skinview3d.SwimAnimation();
-          } else if (username === "espiral_") {
-            viewer.animation = new skinview3d.WalkingAnimation();
-            viewer.animation.speed = 1.5; // Correr
-          } else if (username === "pilahd14" || username === "zarahoria") {
-            viewer.animation = new skinview3d.WaveAnimation("left");
-            viewer.animation.speed = 1.5;
-          } else {
-            viewer.animation = new skinview3d.WaveAnimation("right");
-            viewer.animation.speed = 1.5;
-          }
-          viewer.autoRotate = false;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-          // Retornar a estático (sin animación)
-          viewer.animation = null;
-          viewer.autoRotate = false;
-          viewer.camera.position.x = 0;
-          viewer.camera.position.y = 0;
-          viewer.camera.position.z = 15;
-        });
-      }
-      
-    } catch(e) {
-      console.error(`Error al inicializar skin 3D de ${username}:`, e);
-      const container = document.getElementById(`skin3d-${username}`);
-      if (container) {
-        container.innerHTML = `<img src="https://mc-heads.net/body/${username}/80" class="staff-skin-img" style="height: 80px;" alt="${username}">`;
-      }
-    }
-  });
-}
-
-// Polling de inicialización seguro para evitar race condition con script CDN
-function checkAndInit() {
-  if (typeof skinview3d !== 'undefined') {
-    initListSkins();
-  } else {
-    setTimeout(checkAndInit, 50);
-  }
-}
-
-checkAndInit();
 </script>
 "##
 }

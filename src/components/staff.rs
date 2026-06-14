@@ -78,7 +78,7 @@ pub fn render() -> &'static str {
 </div>
 
 <!-- Incluir la librería de skinview3d para visualización 3D interactiva -->
-<script src="https://unpkg.com/skinview3d@3.4.2/bundles/skinview3d.bundle.js"></script>
+<script src="/skinview3d.bundle.js"></script>
 
 <!-- Modal emergente para detalles de Staff -->
 <div id="staffModal" class="staff-modal-overlay">

@@ -195,12 +195,12 @@ function openStaffModal(username) {
       const canvas = document.createElement("canvas");
       container.appendChild(canvas);
 
-      // Usar mineskin.eu para obtener el skin layout de forma segura
+      // Usar mc-heads.net/skin/ que es inmediato y no tiene límites estrictos
       skinViewer = new skinview3d.SkinViewer({
         canvas: canvas,
         width: 200,
         height: 250,
-        skin: `https://mineskin.eu/skin/${username}`
+        skin: `https://mc-heads.net/skin/${username}`
       });
 
       // Configurar controles orbitales (arrastrar para rotar)
@@ -255,9 +255,9 @@ function initListSkins() {
       
       const viewer = new skinview3d.SkinViewer({
         canvas: canvas,
-        width: 70,
-        height: 90,
-        skin: `https://mineskin.eu/skin/${username}`
+        width: 80,
+        height: 100,
+        skin: `https://mc-heads.net/skin/${username}`
       });
       
       // Ajustar posición inicial elegante en perspectiva
@@ -265,22 +265,25 @@ function initListSkins() {
       viewer.camera.position.y = 8;
       viewer.camera.position.z = 24;
       
-      viewer.autoRotate = false;
+      // Animación de caminar lento de fondo por defecto
+      viewer.autoRotate = true;
+      viewer.autoRotateSpeed = 0.4;
+      viewer.animation = new skinview3d.WalkingAnimation();
+      viewer.animation.speed = 0.3;
+      
       viewers[username] = viewer;
       
       // Agregar eventos hover sobre la tarjeta
       const card = container.closest('.staff-card');
       if (card) {
         card.addEventListener('mouseenter', () => {
-          viewer.animation = new skinview3d.WalkingAnimation();
-          viewer.animation.speed = 0.8;
-          viewer.autoRotate = true;
-          viewer.autoRotateSpeed = 1.8;
+          viewer.animation.speed = 1.0;
+          viewer.autoRotateSpeed = 2.0;
         });
         
         card.addEventListener('mouseleave', () => {
-          viewer.animation = null;
-          viewer.autoRotate = false;
+          viewer.animation.speed = 0.3;
+          viewer.autoRotateSpeed = 0.4;
           viewer.camera.position.x = 12;
           viewer.camera.position.y = 8;
           viewer.camera.position.z = 24;
@@ -297,12 +300,16 @@ function initListSkins() {
   });
 }
 
-// Inicializar cuando el DOM esté listo
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  initListSkins();
-} else {
-  window.addEventListener('DOMContentLoaded', initListSkins);
+// Polling de inicialización seguro para evitar race condition con script CDN
+function checkAndInit() {
+  if (typeof skinview3d !== 'undefined') {
+    initListSkins();
+  } else {
+    setTimeout(checkAndInit, 50);
+  }
 }
+
+checkAndInit();
 </script>
 "##
 }

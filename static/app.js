@@ -6,7 +6,7 @@ async function loadLeaderboard() {
         tbody.innerHTML = '';
 
         if (!data || data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay datos disponibles</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay datos disponibles</td></tr>';
             return;
         }
 
@@ -16,12 +16,15 @@ async function loadLeaderboard() {
                 <td style="font-weight: bold; color: #60a5fa;">#${index + 1}</td>
                 <td>${player.username}</td>
                 <td style="color: #ef4444; font-weight: 600;">${player.kills}</td>
+                <td style="color: #f59e0b; font-weight: 600;">${player.assists}</td>
                 <td style="color: #10b981; font-weight: 600;">${player.wins}</td>
+                <td style="color: #9ca3af; font-weight: 600;">${player.losses}</td>
+                <td style="color: #60a5fa; font-weight: 600;">${player.played}</td>
             `;
             tbody.appendChild(row);
         });
     } catch (e) {
-        document.getElementById('leaderboardBody').innerHTML = '<tr><td colspan="4" style="text-align: center; color: #ef4444;">Error al cargar la clasificación</td></tr>';
+        document.getElementById('leaderboardBody').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ef4444;">Error al cargar la clasificación</td></tr>';
     }
 }
 

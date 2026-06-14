@@ -23,8 +23,7 @@ pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, S
             "orderBy": [{
                 "field": {"fieldPath": "stats.ttr.kills"},
                 "direction": "DESCENDING"
-            }],
-            "limit": 10
+            }]
         }
     });
 
@@ -69,6 +68,18 @@ pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, S
                         .and_then(|k| k.parse::<i32>().ok())
                         .unwrap_or(0);
 
+                    let assists = fields.get("stats")
+                        .and_then(|s| s.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("ttr"))
+                        .and_then(|t| t.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("assists"))
+                        .and_then(|a| a.get("integerValue"))
+                        .and_then(|a| a.as_str())
+                        .and_then(|a| a.parse::<i32>().ok())
+                        .unwrap_or(0);
+
                     let wins = fields.get("stats")
                         .and_then(|s| s.get("mapValue"))
                         .and_then(|m| m.get("fields"))
@@ -81,11 +92,38 @@ pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, S
                         .and_then(|w| w.parse::<i32>().ok())
                         .unwrap_or(0);
 
+                    let losses = fields.get("stats")
+                        .and_then(|s| s.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("ttr"))
+                        .and_then(|t| t.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("losses"))
+                        .and_then(|l| l.get("integerValue"))
+                        .and_then(|l| l.as_str())
+                        .and_then(|l| l.parse::<i32>().ok())
+                        .unwrap_or(0);
+
+                    let played = fields.get("stats")
+                        .and_then(|s| s.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("ttr"))
+                        .and_then(|t| t.get("mapValue"))
+                        .and_then(|m| m.get("fields"))
+                        .and_then(|f| f.get("matches_played"))
+                        .and_then(|p| p.get("integerValue"))
+                        .and_then(|p| p.as_str())
+                        .and_then(|p| p.parse::<i32>().ok())
+                        .unwrap_or(0);
+
                     leaderboard.push(json!({
                         "uuid": name.as_str().unwrap_or("").split('/').last().unwrap_or(""),
                         "username": username,
                         "kills": kills,
-                        "wins": wins
+                        "assists": assists,
+                        "wins": wins,
+                        "losses": losses,
+                        "played": played
                     }));
                 }
             }

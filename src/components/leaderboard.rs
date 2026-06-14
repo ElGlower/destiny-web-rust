@@ -7,7 +7,10 @@ pub fn render(data: &serde_json::Value) -> String {
             let uuid = player.get("uuid").and_then(|v| v.as_str()).unwrap_or("");
             let username = player.get("username").and_then(|v| v.as_str()).unwrap_or("Desconocido");
             let kills = player.get("kills").and_then(|v| v.as_i64()).unwrap_or(0);
+            let assists = player.get("assists").and_then(|v| v.as_i64()).unwrap_or(0);
             let wins = player.get("wins").and_then(|v| v.as_i64()).unwrap_or(0);
+            let losses = player.get("losses").and_then(|v| v.as_i64()).unwrap_or(0);
+            let played = player.get("played").and_then(|v| v.as_i64()).unwrap_or(0);
             
             rows_html.push_str(&format!(
                 r##"<tr class="player-row clickable-row" onclick="window.location.href='/profile/{}'">
@@ -18,14 +21,17 @@ pub fn render(data: &serde_json::Value) -> String {
     <span style="font-weight: 700; color: var(--md-sys-color-primary);">{} <span style="font-size:0.8rem; font-weight:400; color:#888;">(Ver Perfil)</span></span>
   </div>
 </td>
-<td>Wins: {}</td>
-<td class="rating-val">Kills: {}</td>
+<td style="color: #ef4444; font-weight: 600;">{}</td>
+<td style="color: #f59e0b; font-weight: 600;">{}</td>
+<td style="color: #10b981; font-weight: 600;">{}</td>
+<td style="color: #9ca3af; font-weight: 600;">{}</td>
+<td style="color: #60a5fa; font-weight: 600;">{}</td>
 </tr>"##,
-                uuid, rank, username, username, username, wins, kills
+                uuid, rank, username, username, username, kills, assists, wins, losses, played
             ));
         }
     } else {
-        rows_html.push_str("<tr><td colspan=\"4\" style=\"text-align: center; color: #888;\">No hay datos disponibles en la clasificación</td></tr>");
+        rows_html.push_str("<tr><td colspan=\"7\" style=\"text-align: center; color: #888;\">No hay datos disponibles en la clasificación</td></tr>");
     }
     
     format!(
@@ -55,8 +61,11 @@ pub fn render(data: &serde_json::Value) -> String {
 <tr>
 <th>#</th>
 <th>Jugador</th>
-<th>Estadísticas</th>
 <th>Kills</th>
+<th>Assists</th>
+<th>Wins</th>
+<th>Losses</th>
+<th>Partidas</th>
 </tr>
 </thead>
 <tbody>

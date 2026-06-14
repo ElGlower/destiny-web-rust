@@ -11,8 +11,6 @@ pub fn render() -> &'static str {
 <div class="d-flex align-center gap-3">
 <span class="material-symbols-rounded" style="color:var(--md-sys-color-primary); font-size:32px;">dns</span>
 <div>
-<div style="font-weight:700; font-size:1.1rem; text-align: left;">IP del Servidor</div>
-<div id="serverIP" style="color:#a0a0a5; font-size:0.95rem;">play.destinyowner.com</div>
 </div>
 </div>
 <button class="btn btn-primary" onclick="copyToClipboard()">
@@ -48,19 +46,7 @@ pub fn render() -> &'static str {
 
 </div>
 
-<div class="features-grid mt-5">
-<div class="feature-card glass-surface slide-up">
-<span class="material-symbols-rounded feature-icon">bolt</span>
-<h3>Rendimiento Optimizado</h3>
-<p>Nuestra red utiliza hardware de alto rendimiento para garantizar un ping óptimo y cero TPS drops durante combates intensos.</p>
-</div>
-<div class="feature-card glass-surface slide-up">
-<span class="material-symbols-rounded feature-icon">emoji_events</span>
-<h3>Torneos Mensuales</h3>
-<p>Compite en nuestras clasificatorias mensuales y gana premios en la tienda, rangos exclusivos y fragmentos Destiny.</p>
-</div>
-</div>
-</div>
+
 
 <script>
 function copyToClipboard() {

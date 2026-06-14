@@ -41,12 +41,16 @@ async function searchPlayer() {
         const statsMap = data.fields.stats.mapValue.fields.ttr.mapValue.fields;
 
         const kills = statsMap.kills.integerValue || 0;
+        const assists = (statsMap.assists && statsMap.assists.integerValue) || 0;
         const wins = statsMap.wins.integerValue || 0;
+        const losses = (statsMap.losses && statsMap.losses.integerValue) || 0;
         const played = statsMap.matches_played.integerValue || 0;
 
         document.getElementById('playerName').innerText = `Jugador: ${username}`;
         document.getElementById('statKills').innerText = kills;
+        document.getElementById('statAssists').innerText = assists;
         document.getElementById('statWins').innerText = wins;
+        document.getElementById('statLosses').innerText = losses;
         document.getElementById('statPlayed').innerText = played;
         document.getElementById('playerResult').style.display = 'block';
     } catch (e) {

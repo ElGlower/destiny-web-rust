@@ -40,16 +40,6 @@ pub fn render(username: &str, stats_value: &serde_json::Value) -> String {
     let mut ttr_matches = 0;
     let mut ttr_assists = 0;
     
-    let mut sw_kills = 0;
-    let mut sw_wins = 0;
-    let mut sw_losses = 0;
-    let mut sw_matches = 0;
-    
-    let mut bw_kills = 0;
-    let mut bw_wins = 0;
-    let mut bw_losses = 0;
-    let mut bw_matches = 0;
-    
     if let Some(fields) = stats_value.get("fields") {
         if let Some(stats) = fields.get("stats").and_then(|s| s.get("mapValue")).and_then(|m| m.get("fields")) {
             // Parse TTR
@@ -60,27 +50,13 @@ pub fn render(username: &str, stats_value: &serde_json::Value) -> String {
                 ttr_matches = get_json_long(ttr, "matches_played");
                 ttr_assists = get_json_long(ttr, "assists");
             }
-            // Parse SkyWars
-            if let Some(sw) = stats.get("skywars").and_then(|v| v.get("mapValue")).and_then(|m| m.get("fields")) {
-                sw_kills = get_json_long(sw, "kills");
-                sw_wins = get_json_long(sw, "wins");
-                sw_losses = get_json_long(sw, "losses");
-                sw_matches = get_json_long(sw, "matches_played");
-            }
-            // Parse BedWars
-            if let Some(bw) = stats.get("bedwars").and_then(|v| v.get("mapValue")).and_then(|m| m.get("fields")) {
-                bw_kills = get_json_long(bw, "kills");
-                bw_wins = get_json_long(bw, "wins");
-                bw_losses = get_json_long(bw, "losses");
-                bw_matches = get_json_long(bw, "matches_played");
-            }
         }
     }
     
-    let total_kills = ttr_kills + sw_kills + bw_kills;
-    let total_wins = ttr_wins + sw_wins + bw_wins;
-    let total_losses = ttr_losses + sw_losses + bw_losses;
-    let total_matches = ttr_matches + sw_matches + bw_matches;
+    let total_kills = ttr_kills;
+    let total_wins = ttr_wins;
+    let total_losses = ttr_losses;
+    let total_matches = ttr_matches;
     
     let kd_ratio = if total_losses > 0 {
         (total_kills as f64) / (total_losses as f64)
@@ -210,41 +186,6 @@ pub fn render(username: &str, stats_value: &serde_json::Value) -> String {
           </div>
         </div>
       </div>
-
-      <!-- SkyWars Card -->
-      <div class="event-item glass-surface">
-        <div class="event-meta">
-          <span class="event-badge gold" style="background: rgba(52, 73, 94, 0.15); color: #34495e; border-color: rgba(52, 73, 94, 0.2);">SkyWars</span>
-        </div>
-        <div class="event-details">
-          <h3>Destiny SkyWars</h3>
-          <p>Combate en islas flotantes individuales. El último jugador en pie gana.</p>
-          <div class="event-stats-chips">
-            <span class="chip"><span class="material-symbols-rounded">swords</span> {} Kills</span>
-            <span class="chip"><span class="material-symbols-rounded">emoji_events</span> {} Victorias</span>
-            <span class="chip"><span class="material-symbols-rounded">skull</span> {} Derrotas</span>
-            <span class="chip"><span class="material-symbols-rounded">videogame_asset</span> {} Partidas</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- BedWars Card -->
-      <div class="event-item glass-surface">
-        <div class="event-meta">
-          <span class="event-badge gold" style="background: rgba(230, 126, 34, 0.15); color: #e67e22; border-color: rgba(230, 126, 34, 0.2);">BedWars</span>
-        </div>
-        <div class="event-details">
-          <h3>Destiny BedWars</h3>
-          <p>Protege tu cama y destruye la de los oponentes para eliminar a sus equipos.</p>
-          <div class="event-stats-chips">
-            <span class="chip"><span class="material-symbols-rounded">swords</span> {} Kills</span>
-            <span class="chip"><span class="material-symbols-rounded">emoji_events</span> {} Victorias</span>
-            <span class="chip"><span class="material-symbols-rounded">skull</span> {} Derrotas</span>
-            <span class="chip"><span class="material-symbols-rounded">videogame_asset</span> {} Partidas</span>
-          </div>
-        </div>
-      </div>
-      
     </div>
   </div>
 
@@ -254,8 +195,6 @@ pub fn render(username: &str, stats_value: &serde_json::Value) -> String {
         username, username, username, total_wins, kd_ratio, total_matches,
         points_str, 
         pt0.0, pt0.1, pt1.0, pt1.1, pt2.0, pt2.1, pt3.0, pt3.1, pt4.0, pt4.1, pt5.0, pt5.1,
-        ttr_kills, ttr_assists, ttr_wins, ttr_losses, ttr_matches,
-        sw_kills, sw_wins, sw_losses, sw_matches,
-        bw_kills, bw_wins, bw_losses, bw_matches
+        ttr_kills, ttr_assists, ttr_wins, ttr_losses, ttr_matches
     )
 }

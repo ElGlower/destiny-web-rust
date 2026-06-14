@@ -41,14 +41,7 @@
             <div id="playerResult" style="display: none;">
                 <h3 id="playerName" style="margin-top: 30px; margin-bottom: 15px;"></h3>
                 
-                <!-- Pestañas de Minijuegos -->
-                <div class="tabs">
-                    <button class="tab-button active" onclick="switchTab('ttr')">The Towers</button>
-                    <button class="tab-button" onclick="switchTab('skywars')">SkyWars</button>
-                    <button class="tab-button" onclick="switchTab('bedwars')">BedWars</button>
-                </div>
-
-                <!-- Contenido de Pestañas -->
+                <!-- Contenido de Estadísticas (The Towers) -->
                 <div id="tab-ttr" class="tab-content active">
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -56,54 +49,22 @@
                             <div class="value" id="statKills">-</div>
                         </div>
                         <div class="stat-card">
+                            <div class="label">Asistencias</div>
+                            <div class="value" id="statAssists">-</div>
+                        </div>
+                        <div class="stat-card">
                             <div class="label">Victorias</div>
                             <div class="value" id="statWins">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Derrotas</div>
+                            <div class="value" id="statLosses">-</div>
                         </div>
                         <div class="stat-card">
                             <div class="label">Partidas Jugadas</div>
                             <div class="value" id="statPlayed">-</div>
                         </div>
                     </div>
-                </div>
-
-                <div id="tab-skywars" class="tab-content">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="label">Asesinatos</div>
-                            <div class="value">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="label">Victorias</div>
-                            <div class="value">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="label">Partidas Jugadas</div>
-                            <div class="value">0</div>
-                        </div>
-                    </div>
-                    <p style="text-align: center; color: var(--text-muted); margin-top: 15px; font-size: 0.9em;">
-                        Estadísticas de SkyWars (Destiny Network). Minijuego en desarrollo.
-                    </p>
-                </div>
-
-                <div id="tab-bedwars" class="tab-content">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="label">Camas Destruidas</div>
-                            <div class="value">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="label">Victorias</div>
-                            <div class="value">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="label">Partidas Jugadas</div>
-                            <div class="value">0</div>
-                        </div>
-                    </div>
-                    <p style="text-align: center; color: var(--text-muted); margin-top: 15px; font-size: 0.9em;">
-                        Estadísticas de BedWars (Destiny Network). Minijuego en desarrollo.
-                    </p>
                 </div>
             </div>
         </div>

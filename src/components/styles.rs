@@ -219,7 +219,7 @@ tr:hover .player-head { transform: scale(1.18) rotate(4deg); }
   background: rgba(255,255,255,0.05);
   box-shadow: 0 12px 24px rgba(0,0,0,0.3);
 }
-.staff-skin-wrapper {
+.staff-skin-3d-wrapper {
   position: relative;
   width: 90px;
   height: 90px;
@@ -229,31 +229,13 @@ tr:hover .player-head { transform: scale(1.18) rotate(4deg); }
   overflow: visible;
   margin-bottom: 12px;
 }
-.staff-skin-img {
-  height: 95px;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  object-fit: contain;
+.staff-skin-3d-wrapper canvas {
+  outline: none;
   filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
-.staff-skin-img.normal-pose {
-  opacity: 1;
-  z-index: 2;
-}
-.staff-skin-img.hover-pose {
-  opacity: 0;
-  z-index: 1;
-}
-.staff-card:hover .normal-pose {
-  opacity: 0;
-}
-.staff-card:hover .hover-pose {
-  opacity: 1;
-  transform: translateX(-50%) scale(1.08);
-  animation: waving 0.8s ease-in-out infinite;
+.staff-card:hover .staff-skin-3d-wrapper canvas {
+  transform: scale(1.08);
 }
 @keyframes waving {
   0% { transform: translateX(-50%) scale(1.08) rotate(0deg); }

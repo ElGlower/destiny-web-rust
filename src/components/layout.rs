@@ -8,6 +8,13 @@ pub fn render_page(title: &str, active_route: &str, body: &str) -> String {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>{} | DestinyOwner</title>
+<link rel="icon" type="image/png" href="/icon.png">
+<meta property="og:title" content="Destiny Network - Estadísticas en Tiempo Real">
+<meta property="og:description" content="Estadísticas en tiempo real, clasificaciones globales y perfiles del servidor Destiny Network.">
+<meta property="og:image" content="/icon.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/icon.png">
 <style>{}</style>
 </head>
 <body>

@@ -219,6 +219,7 @@ tr:hover .player-head { transform: scale(1.18) rotate(4deg); }
 .rank.admin { background: rgba(239, 83, 80, 0.15); color: #ef5350; }
 .rank.developer { background: rgba(41, 182, 246, 0.15); color: #29b6f6; }
 .rank.moderator { background: rgba(102, 187, 106, 0.15); color: #66bb6a; }
+.rank.team { background: rgba(208, 188, 255, 0.15); color: #d0bcff; }
 
 /* Responsive Mobile Rules */
 @media (max-width: 768px) {

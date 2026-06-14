@@ -7,44 +7,42 @@ pub fn render() -> &'static str {
 </div>
 
 <div class="staff-section mt-5">
-<h2 class="staff-rank-title slide-up">Administración</h2>
+<h2 class="staff-rank-title slide-up">DestinyTeam</h2>
 <div class="staff-grid">
   <div class="staff-card glass-surface slide-up">
-    <img src="https://mc-heads.net/body/LuisJavier/100" class="staff-skin-img" alt="LuisJavier">
-    <h3>LuisJavier</h3>
-    <p class="rank admin">Fundador & Admin</p>
+    <img src="https://mc-heads.net/body/sombradr/100" class="staff-skin-img" alt="sombradr">
+    <h3>sombradr</h3>
+    <p class="rank team">DestinyTeam</p>
   </div>
   <div class="staff-card glass-surface slide-up">
-    <img src="https://mc-heads.net/body/elglower/100" class="staff-skin-img" alt="elglower">
-    <h3>elglower</h3>
-    <p class="rank admin">Administrador</p>
-  </div>
-</div>
-</div>
-
-<div class="staff-section mt-5">
-<h2 class="staff-rank-title slide-up">Desarrollo</h2>
-<div class="staff-grid">
-  <div class="staff-card glass-surface slide-up">
-    <img src="https://mc-heads.net/body/jeb_/100" class="staff-skin-img" alt="jeb_">
-    <h3>jeb_</h3>
-    <p class="rank developer">Desarrollador Lead</p>
-  </div>
-</div>
-</div>
-
-<div class="staff-section mt-5">
-<h2 class="staff-rank-title slide-up">Moderación</h2>
-<div class="staff-grid">
-  <div class="staff-card glass-surface slide-up">
-    <img src="https://mc-heads.net/body/Steve/100" class="staff-skin-img" alt="Steve">
-    <h3>Steve</h3>
-    <p class="rank moderator">Moderador</p>
+    <img src="https://mc-heads.net/body/ElBalam15/100" class="staff-skin-img" alt="ElBalam15">
+    <h3>ElBalam15</h3>
+    <p class="rank team">DestinyTeam</p>
   </div>
   <div class="staff-card glass-surface slide-up">
-    <img src="https://mc-heads.net/body/Alex/100" class="staff-skin-img" alt="Alex">
-    <h3>Alex</h3>
-    <p class="rank moderator">Moderadora</p>
+    <img src="https://mc-heads.net/body/ElGlower/100" class="staff-skin-img" alt="ElGlower">
+    <h3>ElGlower</h3>
+    <p class="rank team">DestinyTeam</p>
+  </div>
+  <div class="staff-card glass-surface slide-up">
+    <img src="https://mc-heads.net/body/Cestart/100" class="staff-skin-img" alt="Cestart">
+    <h3>Cestart</h3>
+    <p class="rank team">DestinyTeam</p>
+  </div>
+  <div class="staff-card glass-surface slide-up">
+    <img src="https://mc-heads.net/body/prismangames/100" class="staff-skin-img" alt="prismangames">
+    <h3>prismangames</h3>
+    <p class="rank team">DestinyTeam</p>
+  </div>
+  <div class="staff-card glass-surface slide-up">
+    <img src="https://mc-heads.net/body/ripkyn/100" class="staff-skin-img" alt="ripkyn">
+    <h3>ripkyn</h3>
+    <p class="rank team">DestinyTeam</p>
+  </div>
+  <div class="staff-card glass-surface slide-up">
+    <img src="https://mc-heads.net/body/zarahoria/100" class="staff-skin-img" alt="zarahoria">
+    <h3>zarahoria</h3>
+    <p class="rank team">DestinyTeam</p>
   </div>
 </div>
 </div>

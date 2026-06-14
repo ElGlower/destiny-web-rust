@@ -78,7 +78,7 @@ pub fn render() -> &'static str {
 </div>
 
 <!-- Incluir la librería de skinview3d para visualización 3D interactiva -->
-<script src="https://unpkg.com/skinview3d@3.0.0/dist/bundle/skinview3d.bundle.js"></script>
+<script src="https://unpkg.com/skinview3d@3.4.2/bundles/skinview3d.bundle.js"></script>
 
 <!-- Modal emergente para detalles de Staff -->
 <div id="staffModal" class="staff-modal-overlay">
@@ -202,18 +202,17 @@ function openStaffModal(username) {
         skin: `/api/skin/${username}`
       });
 
-      // Configurar controles orbitales (arrastrar para rotar)
-      const orbitControl = skinview3d.createOrbitControls(skinViewer);
-      orbitControl.enableZoom = false;
-      orbitControl.enablePan = false;
+      // Configurar controles orbitales (incorporados en skinview3d v3.x)
+      skinViewer.controls.enableZoom = false;
+      skinViewer.controls.enablePan = false;
 
       // Animaciones y velocidad
       skinViewer.autoRotate = true;
       skinViewer.autoRotateSpeed = 0.6;
 
-      // Aplicar animación de caminar de Minecraft
-      skinViewer.animation = new skinview3d.WalkingAnimation();
-      skinViewer.animation.speed = 0.7;
+      // Aplicar animación de saludar (WaveAnimation) al abrir
+      skinViewer.animation = new skinview3d.WaveAnimation("right");
+      skinViewer.animation.speed = 1.0;
 
     } catch (e) {
       console.error("Error al cargar visor de skin 3D:", e);
@@ -276,11 +275,25 @@ function initListSkins() {
       const card = container.closest('.staff-card');
       if (card) {
         card.addEventListener('mouseenter', () => {
-          viewer.animation.speed = 1.0;
+          // Cambiar pose/animación al pasar el mouse (saludar, nadar o correr)
+          if (username === "ElBalam15" || username === "prismangames" || username === "ripkyn") {
+            viewer.animation = new skinview3d.SwimAnimation();
+          } else if (username === "espiral_") {
+            viewer.animation = new skinview3d.WalkingAnimation();
+            viewer.animation.speed = 1.5; // Correr
+          } else if (username === "pilahd14" || username === "zarahoria") {
+            viewer.animation = new skinview3d.WaveAnimation("left");
+            viewer.animation.speed = 1.5;
+          } else {
+            viewer.animation = new skinview3d.WaveAnimation("right");
+            viewer.animation.speed = 1.5;
+          }
           viewer.autoRotateSpeed = 2.0;
         });
         
         card.addEventListener('mouseleave', () => {
+          // Retornar a caminar lento por defecto
+          viewer.animation = new skinview3d.WalkingAnimation();
           viewer.animation.speed = 0.3;
           viewer.autoRotateSpeed = 0.4;
           viewer.camera.position.x = 12;

@@ -15,7 +15,7 @@ pub fn render_page(title: &str, active_route: &str, body: &str) -> String {
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="/icon.png">
-<script src="https://unpkg.com/skinview3d@3.0.0/dist/bundle/skinview3d.bundle.js"></script>
+<script src="https://unpkg.com/skinview3d@3.4.2/bundles/skinview3d.bundle.js"></script>
 <style>{}</style>
 </head>
 <body>

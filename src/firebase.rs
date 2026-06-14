@@ -56,6 +56,19 @@ pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, S
                 if let (Some(fields), Some(name)) = (doc.get("fields"), doc.get("name")) {
                     let username = fields.get("username").and_then(|u| u.get("stringValue")).and_then(|u| u.as_str()).unwrap_or("Desconocido").to_string();
                     
+                    let username_lower = username.to_lowercase();
+                    if username_lower == "cestart"
+                        || username_lower == "espiral_"
+                        || username_lower == "prismangames"
+                        || username_lower == "pilahd14"
+                        || username_lower == "pilah14"
+                        || username_lower == "elbalam15"
+                        || username_lower == "sombradr"
+                        || username_lower == "elglower"
+                    {
+                        continue;
+                    }
+                    
                     let kills = fields.get("stats")
                         .and_then(|s| s.get("mapValue"))
                         .and_then(|m| m.get("fields"))

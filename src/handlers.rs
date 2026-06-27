@@ -9,8 +9,6 @@ use crate::state::AppState;
 use crate::firebase;
 use crate::components;
 
-// --- API REST Endpoints ---
-
 pub async fn get_leaderboard(
     State(state): State<AppState>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
@@ -32,8 +30,6 @@ pub async fn get_live_status(
     let data = firebase::fetch_live_status(&state).await?;
     Ok(Json(data))
 }
-
-// --- Server-Side Rendered (SSR) Web Pages ---
 
 pub async fn home_page() -> Html<String> {
     Html(components::layout::render_page("Inicio", "/", components::home::render()))
@@ -75,20 +71,15 @@ pub async fn get_skin_proxy(
 ) -> impl IntoResponse {
     let url = format!("https://mc-heads.net/skin/{}", username);
     match reqwest::get(&url).await {
-        Ok(resp) => {
-            if resp.status().is_success() {
-                if let Ok(bytes) = resp.bytes().await {
-                    let mut headers = axum::http::HeaderMap::new();
-                    headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("image/png"));
-                    headers.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, header::HeaderValue::from_static("*"));
-                    return (StatusCode::OK, headers, bytes.to_vec()).into_response();
-                }
+        Ok(resp) if resp.status().is_success() => {
+            if let Ok(bytes) = resp.bytes().await {
+                let mut headers = axum::http::HeaderMap::new();
+                headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("image/png"));
+                headers.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, header::HeaderValue::from_static("*"));
+                return (StatusCode::OK, headers, bytes.to_vec()).into_response();
             }
         }
-        Err(e) => {
-            eprintln!("Error al hacer proxy de skin para {}: {}", username, e);
-        }
+        _ => {}
     }
     StatusCode::NOT_FOUND.into_response()
 }
-

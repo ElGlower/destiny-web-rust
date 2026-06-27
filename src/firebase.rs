@@ -2,6 +2,11 @@ use axum::http::StatusCode;
 use serde_json::{json, Value};
 use crate::state::AppState;
 
+const EXCLUDED_USERS: &[&str] = &[
+    "cestart", "espiral_", "prismangames", "pilahd14",
+    "pilah14", "elbalam15", "sombradr", "elglower",
+];
+
 async fn get_auth_token(state: &AppState) -> Result<String, (StatusCode, String)> {
     let scopes = &["https://www.googleapis.com/auth/datastore"];
     match state.auth.token(scopes).await {
@@ -10,140 +15,128 @@ async fn get_auth_token(state: &AppState) -> Result<String, (StatusCode, String)
     }
 }
 
-pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, String)> {
+fn extract_int(fields: &Value, key: &str) -> i64 {
+    fields.get(key)
+        .and_then(|v| v.get("integerValue"))
+        .and_then(|v| v.as_str())
+        .and_then(|s| s.parse::<i64>().ok())
+        .unwrap_or(0)
+}
+
+fn get_mode_stats(fields: &Value, mode: &str) -> (i64, i64, i64, i64, i64) {
+    let mode_fields = fields.get("stats")
+        .and_then(|s| s.get("mapValue"))
+        .and_then(|m| m.get("fields"))
+        .and_then(|f| f.get(mode))
+        .and_then(|t| t.get("mapValue"))
+        .and_then(|m| m.get("fields"));
+
+    match mode_fields {
+        Some(f) => (
+            extract_int(f, "kills"),
+            extract_int(f, "assists"),
+            extract_int(f, "wins"),
+            extract_int(f, "losses"),
+            extract_int(f, "matches_played"),
+        ),
+        None => (0, 0, 0, 0, 0),
+    }
+}
+
+async fn run_firestore_query(state: &AppState, query: Value) -> Result<Value, (StatusCode, String)> {
     let token = get_auth_token(state).await?;
     let url = format!(
         "https://firestore.googleapis.com/v1/projects/{}/databases/(default)/documents:runQuery",
         state.project_id
     );
-
-    let query = json!({
-        "structuredQuery": {
-            "from": [{"collectionId": "players"}],
-            "orderBy": [{
-                "field": {"fieldPath": "stats.ttr.kills"},
-                "direction": "DESCENDING"
-            }]
-        }
-    });
-
     let client = reqwest::Client::new();
-    let response = match client
+    let response = client
         .post(&url)
         .bearer_auth(&token)
         .json(&query)
         .send()
         .await
-    {
-        Ok(res) => res,
-        Err(e) => return Err((StatusCode::BAD_GATEWAY, format!("Error de red con Firestore: {}", e))),
-    };
+        .map_err(|e| (StatusCode::BAD_GATEWAY, format!("Error de red: {}", e)))?;
 
     if !response.status().is_success() {
         let status_code = response.status();
         let err_body = response.text().await.unwrap_or_default();
-        eprintln!("Error de Firestore en fetch_leaderboard ({}): {}", status_code, err_body);
-        let status = StatusCode::from_u16(status_code.as_u16()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-        return Err((status, "Error al ejecutar consulta en Firestore".to_string()));
+        eprintln!("Error Firestore query ({}): {}", status_code, err_body);
+        return Err((
+            StatusCode::from_u16(status_code.as_u16()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            "Error en Firestore".to_string(),
+        ));
     }
 
-    let raw_results: Value = response.json().await.unwrap();
-    let mut leaderboard = Vec::new();
+    response.json().await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
+}
 
-    if let Some(arr) = raw_results.as_array() {
-        for item in arr {
-            if let Some(doc) = item.get("document") {
-                if let (Some(fields), Some(name)) = (doc.get("fields"), doc.get("name")) {
-                    let username = fields.get("username").and_then(|u| u.get("stringValue")).and_then(|u| u.as_str()).unwrap_or("Desconocido").to_string();
-                    
-                    let username_lower = username.to_lowercase();
-                    if username_lower == "cestart"
-                        || username_lower == "espiral_"
-                        || username_lower == "prismangames"
-                        || username_lower == "pilahd14"
-                        || username_lower == "pilah14"
-                        || username_lower == "elbalam15"
-                        || username_lower == "sombradr"
-                        || username_lower == "elglower"
-                    {
-                        continue;
+pub async fn fetch_leaderboard(state: &AppState) -> Result<Value, (StatusCode, String)> {
+    let ttr_query = json!({
+        "structuredQuery": {
+            "from": [{"collectionId": "players"}],
+            "orderBy": [{"field": {"fieldPath": "stats.ttr.kills"}, "direction": "DESCENDING"}],
+            "limit": 50
+        }
+    });
+
+    let skywars_query = json!({
+        "structuredQuery": {
+            "from": [{"collectionId": "players"}],
+            "orderBy": [{"field": {"fieldPath": "stats.skywars.wins"}, "direction": "DESCENDING"}],
+            "limit": 50
+        }
+    });
+
+    let (ttr_raw, skywars_raw) = tokio::join!(
+        run_firestore_query(state, ttr_query),
+        run_firestore_query(state, skywars_query)
+    );
+
+    let parse_results = |raw: Result<Value, _>, mode: &str| -> Vec<Value> {
+        let mut out = Vec::new();
+        if let Ok(arr_val) = raw {
+            if let Some(arr) = arr_val.as_array() {
+                for item in arr {
+                    if let Some(doc) = item.get("document") {
+                        if let (Some(fields), Some(name)) = (doc.get("fields"), doc.get("name")) {
+                            let username = fields.get("username")
+                                .and_then(|u| u.get("stringValue"))
+                                .and_then(|u| u.as_str())
+                                .unwrap_or("Desconocido")
+                                .to_string();
+
+                            if EXCLUDED_USERS.contains(&username.to_lowercase().as_str()) {
+                                continue;
+                            }
+
+                            let (kills, assists, wins, losses, played) = get_mode_stats(fields, mode);
+
+                            out.push(json!({
+                                "uuid": name.as_str().unwrap_or("").split('/').last().unwrap_or(""),
+                                "username": username,
+                                "kills": kills,
+                                "assists": assists,
+                                "wins": wins,
+                                "losses": losses,
+                                "played": played,
+                                "mode": mode
+                            }));
+                        }
                     }
-                    
-                    let kills = fields.get("stats")
-                        .and_then(|s| s.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("ttr"))
-                        .and_then(|t| t.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("kills"))
-                        .and_then(|k| k.get("integerValue"))
-                        .and_then(|k| k.as_str())
-                        .and_then(|k| k.parse::<i32>().ok())
-                        .unwrap_or(0);
-
-                    let assists = fields.get("stats")
-                        .and_then(|s| s.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("ttr"))
-                        .and_then(|t| t.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("assists"))
-                        .and_then(|a| a.get("integerValue"))
-                        .and_then(|a| a.as_str())
-                        .and_then(|a| a.parse::<i32>().ok())
-                        .unwrap_or(0);
-
-                    let wins = fields.get("stats")
-                        .and_then(|s| s.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("ttr"))
-                        .and_then(|t| t.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("wins"))
-                        .and_then(|w| w.get("integerValue"))
-                        .and_then(|w| w.as_str())
-                        .and_then(|w| w.parse::<i32>().ok())
-                        .unwrap_or(0);
-
-                    let losses = fields.get("stats")
-                        .and_then(|s| s.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("ttr"))
-                        .and_then(|t| t.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("losses"))
-                        .and_then(|l| l.get("integerValue"))
-                        .and_then(|l| l.as_str())
-                        .and_then(|l| l.parse::<i32>().ok())
-                        .unwrap_or(0);
-
-                    let played = fields.get("stats")
-                        .and_then(|s| s.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("ttr"))
-                        .and_then(|t| t.get("mapValue"))
-                        .and_then(|m| m.get("fields"))
-                        .and_then(|f| f.get("matches_played"))
-                        .and_then(|p| p.get("integerValue"))
-                        .and_then(|p| p.as_str())
-                        .and_then(|p| p.parse::<i32>().ok())
-                        .unwrap_or(0);
-
-                    leaderboard.push(json!({
-                        "uuid": name.as_str().unwrap_or("").split('/').last().unwrap_or(""),
-                        "username": username,
-                        "kills": kills,
-                        "assists": assists,
-                        "wins": wins,
-                        "losses": losses,
-                        "played": played
-                    }));
                 }
             }
         }
-    }
+        out
+    };
 
-    Ok(json!(leaderboard))
+    let ttr_list = parse_results(ttr_raw, "ttr");
+    let skywars_list = parse_results(skywars_raw, "skywars");
+
+    Ok(json!({
+        "ttr": ttr_list,
+        "skywars": skywars_list
+    }))
 }
 
 pub async fn fetch_player_stats(state: &AppState, uuid: &str) -> Result<Value, (StatusCode, String)> {
@@ -154,26 +147,23 @@ pub async fn fetch_player_stats(state: &AppState, uuid: &str) -> Result<Value, (
     );
 
     let client = reqwest::Client::new();
-    let response = match client
+    let response = client
         .get(&url)
         .bearer_auth(&token)
         .send()
         .await
-    {
-        Ok(res) => res,
-        Err(e) => return Err((StatusCode::BAD_GATEWAY, format!("Error al consultar Firestore: {}", e))),
-    };
+        .map_err(|e| (StatusCode::BAD_GATEWAY, format!("Error al consultar Firestore: {}", e)))?;
 
     if !response.status().is_success() {
         let status_code = response.status();
-        let err_body = response.text().await.unwrap_or_default();
-        eprintln!("Error de Firestore en fetch_player_stats ({}): {}", status_code, err_body);
-        let status = StatusCode::from_u16(status_code.as_u16()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-        return Err((status, "Jugador no encontrado o error en Firestore".to_string()));
+        eprintln!("Error fetch_player_stats ({})", status_code);
+        return Err((
+            StatusCode::from_u16(status_code.as_u16()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
+            "Jugador no encontrado".to_string(),
+        ));
     }
 
-    let firestore_doc: Value = response.json().await.unwrap();
-    Ok(firestore_doc)
+    response.json().await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
 }
 
 pub async fn fetch_live_status(state: &AppState) -> Result<Value, (StatusCode, String)> {
@@ -184,45 +174,25 @@ pub async fn fetch_live_status(state: &AppState) -> Result<Value, (StatusCode, S
     );
 
     let client = reqwest::Client::new();
-    let response = match client
+    let response = client
         .get(&url)
         .bearer_auth(&token)
         .send()
         .await
-    {
-        Ok(res) => res,
-        Err(e) => return Err((StatusCode::BAD_GATEWAY, format!("Error al consultar Firestore: {}", e))),
-    };
+        .map_err(|e| (StatusCode::BAD_GATEWAY, format!("Error Firestore: {}", e)))?;
 
     if !response.status().is_success() {
         if response.status() == reqwest::StatusCode::NOT_FOUND {
-            return Ok(json!({
-                "status": "DESCONECTADO",
-                "active_event": "Ninguno",
-                "online_players": 0
-            }));
+            return Ok(json!({"status": "DESCONECTADO", "active_event": "Ninguno", "online_players": 0}));
         }
-        let status_code = response.status();
-        let err_body = response.text().await.unwrap_or_default();
-        eprintln!("Error de Firestore en fetch_live_status ({}): {}", status_code, err_body);
-        let status = StatusCode::from_u16(status_code.as_u16()).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR);
-        return Err((status, "Error al obtener estado desde Firestore".to_string()));
+        return Err((StatusCode::BAD_GATEWAY, "Error Firestore status".to_string()));
     }
 
-    let firestore_doc: Value = response.json().await.unwrap();
-    
-    let fields = firestore_doc.get("fields");
+    let doc: Value = response.json().await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    let fields = doc.get("fields");
     let status = fields.and_then(|f| f.get("status")).and_then(|v| v.get("stringValue")).and_then(|s| s.as_str()).unwrap_or("DESCONECTADO").to_string();
     let active_event = fields.and_then(|f| f.get("active_event")).and_then(|v| v.get("stringValue")).and_then(|s| s.as_str()).unwrap_or("Ninguno").to_string();
-    let online_players = fields.and_then(|f| f.get("online_players"))
-        .and_then(|v| v.get("integerValue"))
-        .and_then(|v| v.as_str())
-        .and_then(|v| v.parse::<i32>().ok())
-        .unwrap_or(0);
+    let online_players = fields.and_then(|f| f.get("online_players")).and_then(|v| v.get("integerValue")).and_then(|v| v.as_str()).and_then(|v| v.parse::<i32>().ok()).unwrap_or(0);
 
-    Ok(json!({
-        "status": status,
-        "active_event": active_event,
-        "online_players": online_players
-    }))
+    Ok(json!({"status": status, "active_event": active_event, "online_players": online_players}))
 }

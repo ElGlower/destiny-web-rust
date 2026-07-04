@@ -3,10 +3,12 @@ services:
     name: destiny-web-rust
     runtime: rust
     plan: free
-    buildCommand: cargo build --release
+    buildCommand: cargo build --release -j 1
     startCommand: ./target/release/destiny-web-rust
     envVars:
       - key: FIREBASE_KEY_JSON
         sync: false
       - key: RUST_VERSION
         value: stable
+      - key: CARGO_BUILD_JOBS
+        value: "1"

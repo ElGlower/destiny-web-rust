@@ -13,3 +13,8 @@ yup-oauth2 = "8.3"
 tower-http = { version = "0.5", features = ["cors", "fs"] }
 base64 = "0.21"
 
+[profile.release]
+opt-level = "s"      # Optimize for size to reduce rustc memory usage
+codegen-units = 1    # Use 1 codegen unit to compile crate parts sequentially and save memory
+panic = "abort"      # Remove panic unwinding to reduce binary footprint and compile memory
+

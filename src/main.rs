@@ -39,26 +39,27 @@ async fn main() {
         }
     }
 
-    // 1. Cargar las credenciales de Firebase
-    let secret = match read_service_account_key("firebase-key.json").await {
-        Ok(s) => s,
-        Err(e) => {
-            eprintln!("Error crítico: No se pudo leer 'firebase-key.json': {}", e);
-            return;
-        }
-    };
+    // 1. Cargar las credenciales de Firebase de forma opcional
+    let mut auth = None;
+    let mut project_id = String::new();
 
-    let project_id = secret.project_id.clone().unwrap_or_default();
-    println!("Inicializando servidor de Destiny con el proyecto Firebase: {}", project_id);
-
-    // 2. Autenticador de Google
-    let auth = match ServiceAccountAuthenticator::builder(secret).build().await {
-        Ok(a) => Arc::new(a),
-        Err(e) => {
-            eprintln!("Error al crear el autenticador: {}", e);
-            return;
+    match read_service_account_key("firebase-key.json").await {
+        Ok(secret) => {
+            project_id = secret.project_id.clone().unwrap_or_default();
+            println!("Inicializando autenticador de Firebase para el proyecto: {}", project_id);
+            match ServiceAccountAuthenticator::builder(secret).build().await {
+                Ok(a) => {
+                    auth = Some(Arc::new(a));
+                }
+                Err(e) => {
+                    eprintln!("Error al crear el autenticador de Firebase: {}", e);
+                }
+            }
         }
-    };
+        Err(e) => {
+            eprintln!("Advertencia: No se pudo leer 'firebase-key.json': {}. Continuando sin autenticación de Firebase.", e);
+        }
+    }
 
     let state = AppState { auth, project_id };
 
@@ -81,7 +82,11 @@ async fn main() {
         .with_state(state);
 
     // 4. Iniciar servidor
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+    let port = std::env::var("PORT")
+        .ok()
+        .and_then(|p| p.parse().ok())
+        .unwrap_or(8080);
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("Servidor Web de Destiny iniciado en http://{}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();

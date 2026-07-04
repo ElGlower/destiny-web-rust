@@ -5,6 +5,6 @@ use yup_oauth2::hyper::client::HttpConnector;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub auth: Arc<Authenticator<HttpsConnector<HttpConnector>>>,
+    pub auth: Option<Arc<Authenticator<HttpsConnector<HttpConnector>>>>,
     pub project_id: String,
 }

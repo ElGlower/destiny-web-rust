@@ -8,3 +8,5 @@ services:
     envVars:
       - key: FIREBASE_KEY_JSON
         sync: false
+      - key: RUST_VERSION
+        value: stable

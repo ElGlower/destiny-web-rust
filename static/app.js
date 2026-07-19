@@ -1,6 +1,9 @@
-async function loadLeaderboard() {
+let currentLbGame = 'ttr';
+
+async function loadLeaderboard(game = 'ttr') {
+    currentLbGame = game;
     try {
-        const res = await fetch('/api/leaderboard');
+        const res = await fetch(`/api/leaderboard?game=${game}`);
         const data = await res.json();
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = '';
@@ -28,6 +31,13 @@ async function loadLeaderboard() {
     }
 }
 
+function switchLeaderboard(game) {
+    document.getElementById('btn-lb-ttr').classList.toggle('active', game === 'ttr');
+    document.getElementById('btn-lb-uhc').classList.toggle('active', game === 'uhc');
+    document.getElementById('leaderboardTitle').innerText = `Leaderboard - ${game === 'uhc' ? 'UHC' : 'The Towers'}`;
+    loadLeaderboard(game);
+}
+
 async function searchPlayer() {
     const uuid = document.getElementById('playerUuid').value.trim();
     if (!uuid) return;
@@ -41,20 +51,40 @@ async function searchPlayer() {
         
         // Extraer campos según la estructura de Firebase Firestore
         const username = data.fields.username.stringValue;
-        const statsMap = data.fields.stats.mapValue.fields.ttr.mapValue.fields;
-
-        const kills = statsMap.kills.integerValue || 0;
-        const assists = (statsMap.assists && statsMap.assists.integerValue) || 0;
-        const wins = statsMap.wins.integerValue || 0;
-        const losses = (statsMap.losses && statsMap.losses.integerValue) || 0;
-        const played = statsMap.matches_played.integerValue || 0;
-
         document.getElementById('playerName').innerText = `Jugador: ${username}`;
-        document.getElementById('statKills').innerText = kills;
-        document.getElementById('statAssists').innerText = assists;
-        document.getElementById('statWins').innerText = wins;
-        document.getElementById('statLosses').innerText = losses;
-        document.getElementById('statPlayed').innerText = played;
+
+        // TTR Stats
+        if (data.fields.stats && data.fields.stats.mapValue && data.fields.stats.mapValue.fields.ttr) {
+            const statsMap = data.fields.stats.mapValue.fields.ttr.mapValue.fields;
+            document.getElementById('statKills').innerText = statsMap.kills.integerValue || 0;
+            document.getElementById('statAssists').innerText = (statsMap.assists && statsMap.assists.integerValue) || 0;
+            document.getElementById('statWins').innerText = statsMap.wins.integerValue || 0;
+            document.getElementById('statLosses').innerText = (statsMap.losses && statsMap.losses.integerValue) || 0;
+            document.getElementById('statPlayed').innerText = statsMap.matches_played.integerValue || 0;
+        } else {
+            document.getElementById('statKills').innerText = 0;
+            document.getElementById('statAssists').innerText = 0;
+            document.getElementById('statWins').innerText = 0;
+            document.getElementById('statLosses').innerText = 0;
+            document.getElementById('statPlayed').innerText = 0;
+        }
+
+        // UHC Stats
+        if (data.fields.stats && data.fields.stats.mapValue && data.fields.stats.mapValue.fields.uhc) {
+            const uhcMap = data.fields.stats.mapValue.fields.uhc.mapValue.fields;
+            document.getElementById('statUhcKills').innerText = uhcMap.kills.integerValue || 0;
+            document.getElementById('statUhcAssists').innerText = (uhcMap.assists && uhcMap.assists.integerValue) || 0;
+            document.getElementById('statUhcWins').innerText = uhcMap.wins.integerValue || 0;
+            document.getElementById('statUhcLosses').innerText = (uhcMap.losses && uhcMap.losses.integerValue) || 0;
+            document.getElementById('statUhcPlayed').innerText = uhcMap.matches_played.integerValue || 0;
+        } else {
+            document.getElementById('statUhcKills').innerText = 0;
+            document.getElementById('statUhcAssists').innerText = 0;
+            document.getElementById('statUhcWins').innerText = 0;
+            document.getElementById('statUhcLosses').innerText = 0;
+            document.getElementById('statUhcPlayed').innerText = 0;
+        }
+
         document.getElementById('playerResult').style.display = 'block';
     } catch (e) {
         alert('Error al buscar estadísticas de jugador.');

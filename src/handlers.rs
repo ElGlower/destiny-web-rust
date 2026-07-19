@@ -9,10 +9,19 @@ use crate::state::AppState;
 use crate::firebase;
 use crate::components;
 
+// --- API REST Endpoints ---
+
+#[derive(serde::Deserialize)]
+pub struct LeaderboardQuery {
+    pub game: Option<String>,
+}
+
 pub async fn get_leaderboard(
     State(state): State<AppState>,
+    axum::extract::Query(query): axum::extract::Query<LeaderboardQuery>,
 ) -> Result<Json<Value>, (StatusCode, String)> {
-    let data = firebase::fetch_leaderboard(&state).await?;
+    let game = query.game.unwrap_or_else(|| "ttr".to_string());
+    let data = firebase::fetch_leaderboard(&state, &game).await?;
     Ok(Json(data))
 }
 
@@ -31,6 +40,8 @@ pub async fn get_live_status(
     Ok(Json(data))
 }
 
+// --- Server-Side Rendered (SSR) Web Pages ---
+
 pub async fn home_page() -> Html<String> {
     Html(components::layout::render_page("Inicio", "/", components::home::render()))
 }
@@ -41,10 +52,13 @@ pub async fn staff_page() -> Html<String> {
 
 pub async fn leaderboard_page(
     State(state): State<AppState>,
+    axum::extract::Query(query): axum::extract::Query<LeaderboardQuery>,
 ) -> Result<Html<String>, (StatusCode, String)> {
-    let data = firebase::fetch_leaderboard(&state).await?;
-    let rendered = components::leaderboard::render(&data);
-    Ok(Html(components::layout::render_page("Leaderboard", "/leaderboard", &rendered)))
+    let game = query.game.unwrap_or_else(|| "ttr".to_string());
+    let data = firebase::fetch_leaderboard(&state, &game).await?;
+    let rendered = components::leaderboard::render(&data, &game);
+    let active_route = if game == "uhc" { "/uhc" } else { "/leaderboard" };
+    Ok(Html(components::layout::render_page("Leaderboard", active_route, &rendered)))
 }
 
 pub async fn profile_page(
@@ -71,15 +85,20 @@ pub async fn get_skin_proxy(
 ) -> impl IntoResponse {
     let url = format!("https://mc-heads.net/skin/{}", username);
     match reqwest::get(&url).await {
-        Ok(resp) if resp.status().is_success() => {
-            if let Ok(bytes) = resp.bytes().await {
-                let mut headers = axum::http::HeaderMap::new();
-                headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("image/png"));
-                headers.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, header::HeaderValue::from_static("*"));
-                return (StatusCode::OK, headers, bytes.to_vec()).into_response();
+        Ok(resp) => {
+            if resp.status().is_success() {
+                if let Ok(bytes) = resp.bytes().await {
+                    let mut headers = axum::http::HeaderMap::new();
+                    headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("image/png"));
+                    headers.insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, header::HeaderValue::from_static("*"));
+                    return (StatusCode::OK, headers, bytes.to_vec()).into_response();
+                }
             }
         }
-        _ => {}
+        Err(e) => {
+            eprintln!("Error al hacer proxy de skin para {}: {}", username, e);
+        }
     }
     StatusCode::NOT_FOUND.into_response()
 }
+

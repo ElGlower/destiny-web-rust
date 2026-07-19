@@ -1,6 +1,7 @@
 pub fn render(active_route: &str) -> String {
     let home_active = if active_route == "/" { "active" } else { "" };
     let lb_active = if active_route == "/leaderboard" { "active" } else { "" };
+    let uhc_active = if active_route == "/uhc" { "active" } else { "" };
     let staff_active = if active_route == "/staff" { "active" } else { "" };
 
     format!(
@@ -11,6 +12,7 @@ pub fn render(active_route: &str) -> String {
 <div class="nav-links">
 <a class="{}" href="/">Inicio</a>
 <a class="{}" href="/leaderboard">Leaderboard</a>
+<a class="{}" href="/leaderboard?game=uhc">UHC</a>
 <a class="{}" href="/staff">Staff</a>
 </div>
 <div class="d-flex align-center gap-3">
@@ -22,6 +24,7 @@ pub fn render(active_route: &str) -> String {
 <div class="mobile-menu" id="mobileMenu">
 <a class="{}" href="/">Inicio</a>
 <a class="{}" href="/leaderboard">Leaderboard</a>
+<a class="{}" href="/leaderboard?game=uhc">UHC</a>
 <a class="{}" href="/staff">Staff</a>
 <a href="/login">Iniciar Sesión</a>
 </div>
@@ -36,6 +39,6 @@ function toggleMobileMenu() {{
 }}
 </script>
 "##,
-        home_active, lb_active, staff_active, home_active, lb_active, staff_active
+        home_active, lb_active, uhc_active, staff_active, home_active, lb_active, uhc_active, staff_active
     )
 }

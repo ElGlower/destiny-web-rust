@@ -41,6 +41,11 @@
             <div id="playerResult" style="display: none;">
                 <h3 id="playerName" style="margin-top: 30px; margin-bottom: 15px;"></h3>
                 
+                <div class="tab-buttons" style="display: flex; gap: 8px; margin-bottom: 15px;">
+                    <button class="tab-button active" onclick="switchTab('ttr')">The Towers</button>
+                    <button class="tab-button" onclick="switchTab('uhc')">UHC</button>
+                </div>
+
                 <!-- Contenido de Estadísticas (The Towers) -->
                 <div id="tab-ttr" class="tab-content active">
                     <div class="stats-grid">
@@ -66,12 +71,44 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Contenido de Estadísticas (UHC) -->
+                <div id="tab-uhc" class="tab-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">Asesinatos</div>
+                            <div class="value" id="statUhcKills">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Asistencias</div>
+                            <div class="value" id="statUhcAssists">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Victorias</div>
+                            <div class="value" id="statUhcWins">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Derrotas</div>
+                            <div class="value" id="statUhcLosses">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Partidas Jugadas</div>
+                            <div class="value" id="statUhcPlayed">-</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Tabla de clasificación -->
         <div class="card">
-            <h2>Leaderboard - The Towers</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2 style="margin: 0;" id="leaderboardTitle">Leaderboard - The Towers</h2>
+                <div class="tab-buttons" style="display: flex; gap: 8px;">
+                    <button class="tab-button active" id="btn-lb-ttr" onclick="switchLeaderboard('ttr')">The Towers</button>
+                    <button class="tab-button" id="btn-lb-uhc" onclick="switchLeaderboard('uhc')">UHC</button>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
